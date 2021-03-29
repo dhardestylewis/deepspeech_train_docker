@@ -8,10 +8,10 @@ ENV DEEPSPEECH_VERSION='v0.9.3'
 ENV DEEPSPEECH_OPTIONS="--branch $DEEPSPEECH_VERSION"
 #ENV DEEPSPEECH_SHA=#DEEPSPEECH_SHA#
 
-ENV SOX_VERSION='14.4.2'
-ENV SOX_DIR="sox-${SOX_VERSION}"
-ENV SOX_ARCHIVE="${SOX_DIR}.tar.bz2"
-ENV SOX_LINK="https://sourceforge.net/projects/sox/files/sox/${SOX_VERSION}/${SOX_ARCHIVE}/download"
+#ENV SOX_VERSION='14.4.2'
+#ENV SOX_DIR="sox-${SOX_VERSION}"
+#ENV SOX_ARCHIVE="${SOX_DIR}.tar.bz2"
+#ENV SOX_LINK="https://sourceforge.net/projects/sox/files/sox/${SOX_VERSION}/${SOX_ARCHIVE}/download"
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         apt-utils \
@@ -25,7 +25,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
         locales \
         python3-venv \
         unzip \
-        wget
+        wget \
+        sox \
+        libsox-fmt-all
 
 # We need to remove it because it's breaking deepspeech install later with
 # weird errors about setuptools
@@ -37,14 +39,14 @@ RUN apt-get install -y --no-install-recommends libopus0 libsndfile1
 # Try and free some space
 RUN rm -rf /var/lib/apt/lists/*
 
-RUN wget -O $SOX_ARCHIVE $SOX_LINK && \
-    tar -xvf $SOX_ARCHIVE && \
-    rm $SOX_ARCHIVE
-WORKDIR $SOX_DIR
-RUN ./configure && make -s && make install
+#RUN wget -O $SOX_ARCHIVE $SOX_LINK && \
+#    tar -xvf $SOX_ARCHIVE && \
+#    rm $SOX_ARCHIVE
+#WORKDIR $SOX_DIR
+#RUN ./configure && make -s && make install
 
 WORKDIR /
-RUN rm -Rf $SOX_DIR
+#RUN rm -Rf $SOX_DIR
 
 RUN git clone $DEEPSPEECH_OPTIONS $DEEPSPEECH_REPO DeepSpeech
 
